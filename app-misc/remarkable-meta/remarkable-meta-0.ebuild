@@ -12,14 +12,21 @@ S="${WORKDIR}"
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
-IUSE="+cloud +convert gui mouse news +screenshot server +stream +sync"
+IUSE="+cloud +convert dev firmware gui mouse news +screenshot server +stream +sync"
 
 # amd64-only members: rm-exporter-bin (upstream only publishes an x86_64
-# Linux build) and goosepaper (weasyprint/readability-lxml are not
-# keyworded on arm64)
+# Linux build), goosepaper (weasyprint/readability-lxml are not keyworded
+# on arm64), and codexctl and vbuild (indexed-gzip and podman are
+# amd64-only).  The SDK is left out: it needs a device USE flag and is
+# several GB per device.
 RDEPEND="
 	cloud? ( net-misc/rmapi )
 	convert? ( app-text/rmc )
+	dev? (
+		dev-util/qmldiff
+		amd64? ( dev-util/vbuild )
+	)
+	firmware? ( amd64? ( app-misc/codexctl ) )
 	gui? (
 		app-misc/remanager
 		app-misc/remarkable-remember

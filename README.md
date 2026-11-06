@@ -21,6 +21,13 @@ Gentoo ebuild repository for host-side tools that work with the
 | `x11-misc/remarkable-tablet-driver` | 0_pre20260506 | Pen tablet driver using uinput, so it works on Wayland too |
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
+| `app-misc/codexctl` | 1.2.1_p1793410533 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
+| `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
+| `dev-util/vbuild` | 0.0.36 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
+| `dev-embedded/remarkable-sdk-bin` | 3.28.0.172 | reMarkable's official cross toolchains with Qt 6, one per device |
+| `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
+| `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
+| `dev-python/ext4`, `dev-python/libconf`, `dev-python/fuse-python` | | Dependencies of the above |
 | `app-misc/remarkable-meta` | 0 | Meta package that pulls in the tools above by USE flag |
 | `acct-{user,group}/rmfakecloud` | 0 | Service account for rmfakecloud |
 
@@ -145,6 +152,48 @@ Wikipedia's current events, Mastodon, Bluesky, Reddit and weather, and picks
 a style and a page profile per tablet model. With `--deliver` it uploads the
 result through rmapi's credentials.
 
+### Firmware
+
+**codexctl** (`app-misc/codexctl`) manages the tablet's OS version from the
+computer. It lists the firmware releases for each model, downloads update
+files, and installs a chosen version over SSH, including downgrades, which
+the tablet itself doesn't offer. It can also back up documents, upload PDFs,
+and look inside update files without a tablet: `ls`, `cat`, `extract`, and
+`mount` (with USE=`fuse`). Flashing firmware can leave the tablet unbootable
+if it goes wrong, so read upstream's caveats first. It is built on
+**remarkable-update-image** and **remarkable-update-fuse**; the latter also
+installs `rmufuse` to mount an update image directly.
+
+### Development
+
+These are for writing and packaging mods; see "Developing for the tablet"
+below for how they fit together.
+
+**qmldiff** (`dev-util/qmldiff`) is the tool behind QMD mods, the text
+patches that xovi's qt-resource-rebuilder applies to the tablet's QML
+interface. `create-hashtab` builds a hash table from a dump of xochitl's QML
+files, `hash-diffs` turns a readable diff into the hashed form that mods ship
+(and back with `-r`), and `apply-diffs` applies diffs to a QML tree, so you
+can check a mod on the computer. Upstream has no releases; this is a snapshot
+of master.
+
+**vbuild** (`dev-util/vbuild`) builds Vellum packages from `VELBUILD` files,
+the same way Vellum's CI does. It translates the recipe to an Alpine
+`APKBUILD` and runs `abuild` inside the `ghcr.io/eeems/vbuild-builder`
+container, which it pulls on first use, then signs the `.apk` with a key it
+generates in `~/.config/vbuild`. It needs Podman or Docker and network
+access.
+
+**remarkable-sdk-bin** (`dev-embedded/remarkable-sdk-bin`) installs
+reMarkable's official SDKs: a GCC cross compiler, Qt 6, CMake, Meson and a
+sysroot matching one OS release. Pick devices with USE flags (`rm1`, `rm2`,
+`ferrari` = Paper Pro, `chiappa` = Paper Pro Move, `tatsu` = Paper Pure);
+each is about 0.5 GB to download and 2.7 GB installed, under
+`/opt/codex/<device>/5.8.203`, the path Vellum's recipes use. Source
+`environment-setup-*` in that directory to get `CC`, `CXX`, `qmake6`,
+`CMAKE_TOOLCHAIN_FILE` and pkg-config set up. The version is the OS release
+(3.28.0.172) and each release is its own slot.
+
 ### Meta package
 
 **remarkable-meta** (`app-misc/remarkable-meta`) pulls in the tools above by
@@ -154,6 +203,8 @@ USE flag:
 |---|---|---|
 | `cloud` | on | rmapi |
 | `convert` | on | rmc |
+| `dev` | off | qmldiff, vbuild (amd64) |
+| `firmware` | off | codexctl (amd64) |
 | `gui` | off | reManager, reMarkable Remember, rm-exporter (amd64) |
 | `mouse` | off | remarkable-mouse, remarkable-tablet-driver |
 | `news` | off | goosepaper (amd64) |
@@ -164,6 +215,31 @@ USE flag:
 
 It also warns when the kernel lacks the USB networking drivers that the tablet
 needs (`USB_USBNET`, `USB_NET_CDCETHER`, `USB_NET_RNDIS_HOST`).
+
+The SDK isn't part of the meta package: it needs a device flag and several GB
+per device.
+
+## Developing for the tablet
+
+What you need depends on the kind of mod (see Vellum's packages for many
+examples):
+
+* **UI tweaks (QMD files)** need no compiler. Write a diff against xochitl's
+  QML, check it with `qmldiff apply-diffs`, and hash it with
+  `qmldiff hash-diffs` using a hashtab made on the tablet for that OS
+  version. xovi and qt-resource-rebuilder run it on the tablet.
+* **Native programs and xovi extensions** that use the tablet's Qt or
+  system libraries need the SDK for the device and OS version you target:
+  emerge `dev-embedded/remarkable-sdk-bin` with the device flag, source its
+  `environment-setup-*`, and build with qmake6, CMake or Meson.
+* **Self-contained C, Rust or Go tools** can also use a Gentoo cross
+  toolchain from `sys-devel/crossdev`
+  (`crossdev -t armv7a-unknown-linux-gnueabihf` for the rM1/rM2,
+  `aarch64-unknown-linux-gnu` for the Paper Pro family). Link statically or
+  against a glibc no newer than the tablet's, or the binary won't start on
+  the device. The SDK avoids this because its sysroot matches the tablet.
+* **Packaging** for Vellum: write a `VELBUILD` and build it with `vbuild`,
+  or submit it to `vellum-dev/vellum`, whose CI does the same.
 
 ## Setup
 
@@ -212,6 +288,20 @@ source-built packages; `profiles/updates` moves existing installs over.
   rmfakecloud UI uses pnpm, which isn't in ::gentoo.
 * **remarkable-tablet-driver** carries a patch so `--verbose` prints its
   arguments instead of raw format strings.
+* **remarkable-sdk-bin** repeats what the Yocto installer does with
+  `-d <dir>` (unpack the payload, rewrite ELF interpreters with the bundled
+  `relocate_sdk.py`, generate the CMake/Meson cross files, fix text files
+  and symlinks), but stages into the image while baking in the final
+  `/opt/codex` paths. reMarkable publishes no license for the bundle, so it
+  is `RESTRICT="bindist mirror"`. Binary QA checks are off for its ~60,000
+  prebuilt files.
+* **ext4**, **remarkable-update-image**, **remarkable-update-fuse** and
+  **vbuild** are built as plain Python instead of being compiled with
+  Nuitka as upstream does, and their exact `==` pins are relaxed. vbuild also
+  needs its `cli` subpackage listed, which the Nuitka build finds by itself.
+* **codexctl** drops upstream's `<3.14` Python cap and exact pins, and makes
+  the FUSE mount support optional, since the module is only imported by
+  `codexctl mount`.
 * **remarkapy** depends on `dev-python/httpx`, which ::gentoo has deprecated;
   pkgcheck warns about it.
 * **restream** and **resnap** also install the ARMv7 helpers that run on the
@@ -220,7 +310,7 @@ source-built packages; `profiles/updates` moves existing installs over.
 
 ## Maintaining
 
-Version bumps of the Go, npm and .NET packages mean regenerating their
+Version bumps of the Go, npm, .NET and Rust packages mean regenerating their
 dependency lists from the new upstream release:
 
 * `scripts/ego-sum.sh go.sum` prints an `EGO_SUM` array (rmapi, remanager).
@@ -231,6 +321,12 @@ dependency lists from the new upstream release:
   `NUGET_PACKAGES=<empty dir> dotnet restore -r linux-x64 src/ReMarkableRemember/ReMarkableRemember.csproj`
   (and again with `-r linux-arm64`), then list `<id>@<version>` from that
   directory, leaving out the `microsoft.*.runtime.*` and `*.host.*` packs.
+* `scripts/cargo-crates.py Cargo.lock` prints a `CRATES` block (qmldiff);
+  also update `COMMIT` and the crate licenses in `LICENSE`.
+* For a new SDK, copy the ebuild to the new OS version and update
+  `SDK_PV` from the installer names on
+  https://developer.remarkable.com/links (older releases put the files in
+  per-device subdirectories, so check `BASE_URI` too).
 
 For remanager, also check that `WAILS_PV` matches the `wailsapp/wails/v3`
 version in upstream's `go.mod`. Then paste the output into the ebuild and
@@ -253,3 +349,9 @@ run `ebuild <file> manifest`.
 * **rmtree**, **rm-version-switcher**, **vellum**, **goMarkableStream**: run on
   the tablet itself, not on the computer (install them with reManager/Vellum).
 * **RCU**: source isn't freely distributed.
+* **toltec's build tool** (`toltecmk`): archived upstream; vbuild replaces
+  it. toltec's and Eeems's toolchain container images are pulled by vbuild
+  itself, so they aren't packaged.
+* **libremarkable**, **rmkit**, **xovi** and its extensions: frameworks and
+  libraries that are built into tablet programs with the SDK, not host
+  tools.
