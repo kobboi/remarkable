@@ -14,20 +14,21 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm64"
 IUSE="+cloud +convert gui mouse news +screenshot server +stream +sync"
 
+# amd64-only members: rm-exporter-bin (upstream only publishes an x86_64
+# Linux build) and goosepaper (weasyprint/readability-lxml are not
+# keyworded on arm64)
 RDEPEND="
 	cloud? ( net-misc/rmapi )
 	convert? ( app-text/rmc )
 	gui? (
 		app-misc/remanager
 		app-misc/remarkable-remember
-		# upstream only publishes an x86_64 Linux build
 		amd64? ( app-misc/rm-exporter-bin )
 	)
 	mouse? (
 		x11-misc/remarkable-mouse
 		x11-misc/remarkable-tablet-driver
 	)
-	# goosepaper's weasyprint/readability-lxml deps are not keyworded on arm64
 	news? ( amd64? ( app-text/goosepaper ) )
 	screenshot? ( media-gfx/resnap )
 	server? ( net-misc/rmfakecloud-bin )
