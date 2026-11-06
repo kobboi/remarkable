@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=reMarkable Remember
+Comment=Manage your reMarkable tablet
+Exec=reMarkableRemember
+Icon=dev.schneider.remarkableremember
+StartupWMClass=ReMarkableRemember
+Terminal=false
+Categories=Office;

@@ -15,7 +15,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `media-video/restream` | 1.5.0 | Stream the tablet screen to an ffplay window |
 | `app-misc/rmirro` | 0_pre20250112 | Two-way sync between the tablet and a local folder, without the cloud |
 | `app-misc/remanager` | 2.0.0 | Desktop app for installing and managing tablet mods via Vellum (all models incl. Paper Pro) |
-| `app-misc/remarkable-remember-bin` | 1.10.0 | Offline backup, PDF/EPUB upload, templates and handwriting recognition GUI |
+| `app-misc/remarkable-remember` | 1.10.0 | Offline backup, PDF/EPUB upload, templates and handwriting recognition GUI |
 | `app-misc/rm-exporter-bin` | 0.3.0 | Export whole folders and large notebooks to PDF over USB (amd64 only) |
 | `media-gfx/resnap` | 2.5.3 | Screenshot the tablet over SSH |
 | `x11-misc/remarkable-tablet-driver` | 0_pre20260506 | Pen tablet driver using uinput, so it works on Wayland too |
@@ -41,7 +41,11 @@ auto-sync = no
 emerge -av app-misc/remarkable-meta
 ```
 
-All packages are keyworded `~amd64 ~arm64` (rmfakecloud-bin also has `~arm`).
+Packages are keyworded `~amd64 ~arm64`, except `rm-exporter-bin` and
+`goosepaper` (`~amd64` only) and `rmfakecloud-bin` (also `~arm`).
+
+`remanager-bin` and `remarkable-remember-bin` were replaced by
+source-built packages; `profiles/updates` moves existing installs over.
 
 ## Packaging notes
 
@@ -52,14 +56,16 @@ All packages are keyworded `~amd64 ~arm64` (rmfakecloud-bin also has `~arm`).
   nowhere to host a vendor tarball. Its Go modules are fetched straight from
   proxy.golang.org, because the eclass's `mirror://goproxy//` URIs make
   goproxy.io return HTML pages for `golang.org/x/*` modules.
-* **rmfakecloud** is packaged as a binary because its web UI build needs
-  pnpm with network access.
 * **remanager** is built from source: Go modules via `EGO_SUM`, and every
   npm tarball of its frontend as a distfile (named `*.tgz.npm` so `unpack`
   skips them), fed to a private offline npm cache. The Wails v3 fork that
   upstream patches is rebuilt from the proxy.golang.org module zip.
   Vite's native helpers (esbuild, rollup, lightningcss, tailwind oxide) are
   the upstream prebuilt npm packages.
+* **remarkable-remember** is built from source with the `dotnet-pkg`
+  eclass and runs on the system .NET 10 runtime
+  (`dev-dotnet/dotnet-sdk-bin:10.0` at build time). SkiaSharp, HarfBuzzSharp
+  and SQLite native libraries still come prebuilt inside their NuGet packages.
 * **rm-exporter** and **rmfakecloud** stay binary for now: rm-exporter needs
   the unpackaged `wails` CLI to generate its frontend bindings, and the
   rmfakecloud UI uses pnpm, which isn't in ::gentoo.
@@ -67,20 +73,27 @@ All packages are keyworded `~amd64 ~arm64` (rmfakecloud-bin also has `~arm`).
   arguments instead of raw format strings.
 * **remarkapy** depends on `dev-python/httpx`, which ::gentoo has deprecated;
   pkgcheck warns about it.
-* **restream** and **resnap** also install the tablet-side ARMv7 static binary in
-  `/usr/share/restream/restream`, and resnap ships an ARMv7 `lz4` in
-  `/usr/share/resnap/lz4`; copy them to the device with `scp`.
+* **restream** and **resnap** also install the ARMv7 helpers that run on the
+  tablet (`/usr/share/restream/restream` and `/usr/share/resnap/lz4`); copy
+  them to the device with `scp`.
 
 ## Maintaining
 
-`scripts/` has the generators for the long dependency lists:
+Version bumps of the Go, npm and .NET packages mean regenerating their
+dependency lists from the new upstream release:
 
-* `scripts/ego-sum.sh go.sum` prints an `EGO_SUM` array.
-* `scripts/npm-src-uri.py package-lock.json` prints an `NPM_SRC_URI` block,
-  keeping only Linux amd64/arm64 builds of platform-specific packages.
+* `scripts/ego-sum.sh go.sum` prints an `EGO_SUM` array (rmapi, remanager).
+* `scripts/npm-src-uri.py frontend/package-lock.json` prints an
+  `NPM_SRC_URI` block (remanager), keeping only Linux amd64/arm64 builds of
+  platform-specific packages.
+* For `remarkable-remember`, run
+  `NUGET_PACKAGES=<empty dir> dotnet restore -r linux-x64 src/ReMarkableRemember/ReMarkableRemember.csproj`
+  (and again with `-r linux-arm64`), then list `<id>@<version>` from that
+  directory, leaving out the `microsoft.*.runtime.*` and `*.host.*` packs.
 
-Run them against the new upstream release, paste the output into the
-ebuild, then `ebuild <file> manifest`.
+For remanager, also check that `WAILS_PV` matches the `wailsapp/wails/v3`
+version in upstream's `go.mod`. Then paste the output into the ebuild and
+run `ebuild <file> manifest`.
 
 ## Not packaged (yet)
 

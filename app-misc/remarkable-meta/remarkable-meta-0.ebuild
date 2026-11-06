@@ -19,7 +19,7 @@ RDEPEND="
 	convert? ( app-text/rmc )
 	gui? (
 		app-misc/remanager
-		app-misc/remarkable-remember-bin
+		app-misc/remarkable-remember
 		# upstream only publishes an x86_64 Linux build
 		amd64? ( app-misc/rm-exporter-bin )
 	)
