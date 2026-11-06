@@ -14,7 +14,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
 | `media-video/restream` | 1.5.0 | Stream the tablet screen to an ffplay window |
 | `app-misc/rmirro` | 0_pre20250112 | Two-way sync between the tablet and a local folder, without the cloud |
-| `app-misc/remanager-bin` | 2.0.0 | Desktop app for installing and managing tablet mods via Vellum (all models incl. Paper Pro) |
+| `app-misc/remanager` | 2.0.0 | Desktop app for installing and managing tablet mods via Vellum (all models incl. Paper Pro) |
 | `app-misc/remarkable-remember-bin` | 1.10.0 | Offline backup, PDF/EPUB upload, templates and handwriting recognition GUI |
 | `app-misc/rm-exporter-bin` | 0.3.0 | Export whole folders and large notebooks to PDF over USB (amd64 only) |
 | `media-gfx/resnap` | 2.5.3 | Screenshot the tablet over SSH |
@@ -54,8 +54,15 @@ All packages are keyworded `~amd64 ~arm64` (rmfakecloud-bin also has `~arm`).
   goproxy.io return HTML pages for `golang.org/x/*` modules.
 * **rmfakecloud** is packaged as a binary because its web UI build needs
   pnpm with network access.
-* **remanager, remarkable-remember, rm-exporter** are packaged as binaries:
-  their frontends need npm (Wails) or a .NET SDK with network access to build.
+* **remanager** is built from source: Go modules via `EGO_SUM`, and every
+  npm tarball of its frontend as a distfile (named `*.tgz.npm` so `unpack`
+  skips them), fed to a private offline npm cache. The Wails v3 fork that
+  upstream patches is rebuilt from the proxy.golang.org module zip.
+  Vite's native helpers (esbuild, rollup, lightningcss, tailwind oxide) are
+  the upstream prebuilt npm packages.
+* **rm-exporter** and **rmfakecloud** stay binary for now: rm-exporter needs
+  the unpackaged `wails` CLI to generate its frontend bindings, and the
+  rmfakecloud UI uses pnpm, which isn't in ::gentoo.
 * **remarkable-tablet-driver** carries a patch so `--verbose` prints its
   arguments instead of raw format strings.
 * **remarkapy** depends on `dev-python/httpx`, which ::gentoo has deprecated;
@@ -63,6 +70,17 @@ All packages are keyworded `~amd64 ~arm64` (rmfakecloud-bin also has `~arm`).
 * **restream** and **resnap** also install the tablet-side ARMv7 static binary in
   `/usr/share/restream/restream`, and resnap ships an ARMv7 `lz4` in
   `/usr/share/resnap/lz4`; copy them to the device with `scp`.
+
+## Maintaining
+
+`scripts/` has the generators for the long dependency lists:
+
+* `scripts/ego-sum.sh go.sum` prints an `EGO_SUM` array.
+* `scripts/npm-src-uri.py package-lock.json` prints an `NPM_SRC_URI` block,
+  keeping only Linux amd64/arm64 builds of platform-specific packages.
+
+Run them against the new upstream release, paste the output into the
+ebuild, then `ebuild <file> manifest`.
 
 ## Not packaged (yet)
 

@@ -18,7 +18,7 @@ RDEPEND="
 	cloud? ( net-misc/rmapi )
 	convert? ( app-text/rmc )
 	gui? (
-		app-misc/remanager-bin
+		app-misc/remanager
 		app-misc/remarkable-remember-bin
 		amd64? ( app-misc/rm-exporter-bin )
 	)
