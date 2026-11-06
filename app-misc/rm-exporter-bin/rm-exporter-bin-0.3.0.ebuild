@@ -1,0 +1,39 @@
+# Copyright 2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+EAPI=8
+
+inherit desktop
+
+DESCRIPTION="Export folders and large notebooks from a reMarkable tablet to PDF (prebuilt)"
+HOMEPAGE="https://github.com/chopikus/rm-exporter"
+SRC_URI="https://github.com/chopikus/rm-exporter/releases/download/v${PV}/rm-exporter-linux -> ${P}"
+S="${WORKDIR}"
+
+LICENSE="MIT"
+# Bundled Go modules and web frontend
+LICENSE+=" Apache-2.0 BSD ISC"
+SLOT="0"
+KEYWORDS="-* ~amd64"
+RESTRICT="strip"
+
+# Built with Wails v2 against GTK 3 / WebKitGTK 4.1
+RDEPEND="
+	dev-libs/glib:2
+	net-libs/libsoup:3.0
+	net-libs/webkit-gtk:4.1
+	x11-libs/gdk-pixbuf:2
+	x11-libs/gtk+:3
+"
+
+QA_PREBUILT="usr/bin/rm-exporter"
+
+src_install() {
+	newbin "${DISTDIR}"/${P} rm-exporter
+	domenu "${FILESDIR}"/rm-exporter.desktop
+}
+
+pkg_postinst() {
+	elog "rm-exporter talks to the tablet's USB web interface; enable it under"
+	elog "Settings > Storage on the reMarkable and connect it by USB."
+}

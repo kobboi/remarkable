@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=rm-exporter
+Comment=Export folders and notebooks from a reMarkable tablet
+Exec=rm-exporter
+Icon=document-export
+Terminal=false
+Categories=Utility;
