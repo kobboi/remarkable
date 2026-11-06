@@ -8,6 +8,9 @@ inherit go-module
 DESCRIPTION="Go client and interactive shell for the reMarkable cloud API"
 HOMEPAGE="https://github.com/ddvk/rmapi"
 
+# EGO_SUM is deprecated in ::gentoo in favour of vendor tarballs, but an
+# overlay has nowhere to host one.
+# Generated with: scripts/ego-sum.sh go.sum
 EGO_SUM=(
 	"github.com/abiosoft/ishell v2.0.0+incompatible"
 	"github.com/abiosoft/ishell v2.0.0+incompatible/go.mod"
@@ -130,6 +133,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm64"
 
 src_compile() {
+	# The ddvk fork kept the original juruen module path
 	ego build -o ${PN} \
 		-ldflags "-X github.com/juruen/rmapi/version.Version=v${PV}" .
 }
@@ -141,7 +145,7 @@ src_test() {
 src_install() {
 	dobin ${PN}
 	dodoc CHANGELOG.md README.md
-	[[ -d docs ]] && dodoc -r docs/.
+	dodoc -r docs/.
 }
 
 pkg_postinst() {

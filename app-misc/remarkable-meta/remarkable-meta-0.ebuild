@@ -20,12 +20,14 @@ RDEPEND="
 	gui? (
 		app-misc/remanager
 		app-misc/remarkable-remember-bin
+		# upstream only publishes an x86_64 Linux build
 		amd64? ( app-misc/rm-exporter-bin )
 	)
 	mouse? (
 		x11-misc/remarkable-mouse
 		x11-misc/remarkable-tablet-driver
 	)
+	# goosepaper's weasyprint/readability-lxml deps are not keyworded on arm64
 	news? ( amd64? ( app-text/goosepaper ) )
 	screenshot? ( media-gfx/resnap )
 	server? ( net-misc/rmfakecloud-bin )

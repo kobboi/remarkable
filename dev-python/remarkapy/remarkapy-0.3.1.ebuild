@@ -8,6 +8,8 @@ PYTHON_COMPAT=( python3_{12..15} )
 
 inherit distutils-r1 pypi
 
+# Successor of rmapy, written by the goosepaper author for goosepaper
+
 DESCRIPTION="Python client for the reMarkable cloud API"
 HOMEPAGE="
 	https://github.com/j6k4m8/remarkapy

@@ -16,6 +16,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
 
+# The framebuffer is piped through lz4 and converted to PNG with ffmpeg
 RDEPEND="
 	app-arch/lz4
 	media-video/ffmpeg

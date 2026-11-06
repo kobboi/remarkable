@@ -19,6 +19,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
 
+# ffplay, which displays the stream, is only built with USE=sdl
 RDEPEND="
 	app-arch/lz4
 	media-video/ffmpeg[sdl]
@@ -29,6 +30,7 @@ RDEPEND="
 QA_PREBUILT="usr/share/${PN}/restream"
 
 src_unpack() {
+	# Plain files, nothing to extract
 	cp "${DISTDIR}"/${P}.sh "${DISTDIR}"/${P}.arm.static "${S}"/ || die
 }
 

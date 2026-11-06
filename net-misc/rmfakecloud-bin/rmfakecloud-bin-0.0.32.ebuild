@@ -5,6 +5,9 @@ EAPI=8
 
 inherit systemd
 
+# Prebuilt: the server embeds a web UI that is built with pnpm, which is not
+# packaged in ::gentoo, so it cannot be built offline in an ebuild.
+
 DESCRIPTION="Self-hosted replacement for the reMarkable cloud (prebuilt binary)"
 HOMEPAGE="
 	https://github.com/ddvk/rmfakecloud
@@ -23,6 +26,7 @@ LICENSE="AGPL-3"
 LICENSE+=" Apache-2.0 BSD ISC MIT"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~arm ~arm64"
+# Static Go binary
 RESTRICT="strip"
 
 # acct-* are needed at build time too, for fowners in src_install
@@ -35,6 +39,7 @@ RDEPEND="${DEPEND}"
 QA_PREBUILT="usr/bin/rmfakecloud"
 
 src_unpack() {
+	# A single bare executable for the selected arch
 	cp "${DISTDIR}"/${A} "${S}"/rmfakecloud || die
 }
 
@@ -43,6 +48,7 @@ src_install() {
 
 	insinto /etc
 	newins "${FILESDIR}"/rmfakecloud.conf rmfakecloud.conf
+	# Holds JWT_SECRET_KEY and possibly SMTP credentials
 	fperms 0640 /etc/rmfakecloud.conf
 	fowners root:rmfakecloud /etc/rmfakecloud.conf
 

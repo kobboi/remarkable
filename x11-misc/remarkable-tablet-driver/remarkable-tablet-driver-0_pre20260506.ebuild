@@ -5,6 +5,7 @@ EAPI=8
 
 inherit cmake linux-info
 
+# Upstream makes no releases; package a snapshot of the default branch
 COMMIT="a0cdc7370d35e7097a42650926dd362af5fa0567"
 
 DESCRIPTION="Use a reMarkable tablet as a pressure-sensitive pen tablet (works on Wayland)"
@@ -22,6 +23,7 @@ BDEPEND="virtual/pkgconfig"
 
 PATCHES=( "${FILESDIR}"/${P}-print-verbose.patch )
 
+# The virtual pen device is created through /dev/uinput
 CONFIG_CHECK="~INPUT_UINPUT"
 
 pkg_postinst() {
