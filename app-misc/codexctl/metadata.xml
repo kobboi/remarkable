@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>claude@lermytte.be</email>
+	</maintainer>
+	<use>
+		<flag name="fuse">Mount update images as a filesystem (<pkg>dev-python/remarkable-update-fuse</pkg>)</flag>
+	</use>
+	<upstream>
+		<remote-id type="github">Jayy001/codexctl</remote-id>
+		<remote-id type="pypi">codexctl</remote-id>
+	</upstream>
+</pkgmetadata>
