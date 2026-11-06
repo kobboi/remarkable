@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>claude@lermytte.be</email>
+	</maintainer>
+	<use>
+		<flag name="rm1">Install the SDK for the reMarkable 1 (armv7, i.MX 6SoloLite)</flag>
+		<flag name="rm2">Install the SDK for the reMarkable 2 (armv7, i.MX 7Dual)</flag>
+		<flag name="ferrari">Install the SDK for the reMarkable Paper Pro (aarch64)</flag>
+		<flag name="chiappa">Install the SDK for the reMarkable Paper Pro Move (aarch64)</flag>
+		<flag name="tatsu">Install the SDK for the reMarkable Paper Pure (aarch64)</flag>
+	</use>
+</pkgmetadata>
