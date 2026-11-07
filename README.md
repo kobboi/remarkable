@@ -310,6 +310,11 @@ source-built packages; `profiles/updates` moves existing installs over.
 
 ## Maintaining
 
+`scripts/check-updates.py` checks every package against upstream (PyPI,
+GitHub tags and commits, reMarkable's SDK links and codexctl's firmware
+list) and lists what is outdated; `-q` prints only those, and it exits 1
+when something is.
+
 Version bumps of the Go, npm, .NET and Rust packages mean regenerating their
 dependency lists from the new upstream release:
 
