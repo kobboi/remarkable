@@ -25,6 +25,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
 | `dev-util/vbuild` | 0.0.36 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
 | `dev-embedded/remarkable-sdk-bin` | 3.28.0.172 | reMarkable's official cross toolchains with Qt 6, one per device |
+| `dev-embedded/remarkable-os-{rm1,rm2,ferrari,chiappa,tatsu}-bin` | 3.0.4.1305 – 3.28.0.172 | reMarkable OS update images, one package per device, one slot per X.Y release |
 | `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
 | `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
 | `dev-python/ext4`, `dev-python/libconf`, `dev-python/fuse-python` | | Dependencies of the above |
@@ -164,6 +165,31 @@ if it goes wrong, so read upstream's caveats first. It is built on
 **remarkable-update-image** and **remarkable-update-fuse**; the latter also
 installs `rmufuse` to mount an update image directly.
 
+**remarkable-os-\<device\>-bin** (`dev-embedded/remarkable-os-rm1-bin`,
+`-rm2-bin`, `-ferrari-bin`, `-chiappa-bin`, `-tatsu-bin`, named after the
+same device codenames as the SDK's USE flags) install the OS update images
+themselves, unchanged, under `/usr/share/remarkable-os/<version>`: every 3.x
+release codexctl knows of, with one slot per X.Y release so several can sit
+side by side, for example to `diff -r` two `rmufuse` mounts
+(`emerge dev-embedded/remarkable-os-rm2-bin:3.24`). Releases differ per
+device even within an X.Y (3.14.4.0 is Paper Pro only; the rM1/rM2 got
+3.14.1.9), which is why each device is its own package. An image is
+70–110 MB for the rM1/rM2 and 145–235 MB for the Paper Pro family; all of
+them together are about 14 GB.
+
+To mount an image, use `rmufuse` from `dev-python/remarkable-update-fuse`.
+To install one on the tablet, use codexctl (`app-misc/codexctl`), which
+copies the image over SSH, so the tablet doesn't download the update from
+reMarkable:
+
+```
+codexctl install /usr/share/remarkable-os/3.28.0.172/remarkable-production-image-3.28.0.172-rm2-public.swu
+```
+
+codexctl checks that the image matches the tablet. It won't downgrade a
+tablet from 3.11.3 or later to 3.11.2.5 or older; that has to be done by
+hand.
+
 ### Development
 
 These are for writing and packaging mods; see "Developing for the tablet"
@@ -216,8 +242,8 @@ USE flag:
 It also warns when the kernel lacks the USB networking drivers that the tablet
 needs (`USB_USBNET`, `USB_NET_CDCETHER`, `USB_NET_RNDIS_HOST`).
 
-The SDK isn't part of the meta package: it needs a device flag and several GB
-per device.
+The SDK and the OS images aren't part of the meta package: they need a device
+flag and can take several GB.
 
 ## Developing for the tablet
 
@@ -295,6 +321,10 @@ source-built packages; `profiles/updates` moves existing installs over.
   `/opt/codex` paths. reMarkable publishes no license for the bundle, so it
   is `RESTRICT="bindist mirror"`. Binary QA checks are off for its ~60,000
   prebuilt files.
+* **remarkable-os-\*-bin** fetch the images from the S3 bucket codexctl
+  downloads from (`.swu` files at its root, the older `.signed` ones under
+  `omaha/rm1` and `omaha/rm2`). The ebuilds are generated, and are
+  `RESTRICT="bindist mirror"` for the same reason as the SDK.
 * **ext4**, **remarkable-update-image**, **remarkable-update-fuse** and
   **vbuild** are built as plain Python instead of being compiled with
   Nuitka as upstream does, and their exact `==` pins are relaxed. vbuild also
@@ -314,6 +344,12 @@ source-built packages; `profiles/updates` moves existing installs over.
 GitHub tags and commits, reMarkable's SDK links and codexctl's firmware
 list) and lists what is outdated; `-q` prints only those, and it exits 1
 when something is.
+
+New firmware releases need no hand editing:
+`scripts/os-image-ebuilds.py` reads codexctl's `version-ids.json` and writes
+an ebuild for each device's 3.x releases that have none yet. Then run
+`ebuild <file> manifest` in each changed package, which downloads the new
+images.
 
 Version bumps of the Go, npm, .NET and Rust packages mean regenerating their
 dependency lists from the new upstream release:
