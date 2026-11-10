@@ -10,7 +10,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/rmscene` | 0.8.0 | Library for reading and writing v6 `.rm` notebook files |
 | `app-text/rmc` | 0.3.1_pre20260405 | Convert `.rm` files to SVG/PDF/Markdown (PDF export needs Inkscape) |
 | `net-misc/rmapi` | 0.0.35 | CLI and shell for the reMarkable cloud (ddvk fork, built from source) |
-| `net-misc/rmfakecloud-bin` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services |
+| `net-misc/rmfakecloud` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services (`-bin` variant for arm) |
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
 | `media-video/restream` | 1.5.0 | Stream the tablet screen to an ffplay window |
 | `app-misc/rmirro` | 0_pre20250112 | Two-way sync between the tablet and a local folder, without the cloud |
@@ -63,7 +63,7 @@ annotations. On first start it asks for a one-time code from
 my.remarkable.com to pair. It also works against rmfakecloud by pointing
 `RMAPI_HOST` at it.
 
-**rmfakecloud** (`net-misc/rmfakecloud-bin`) is a self-hosted server that
+**rmfakecloud** (`net-misc/rmfakecloud`) is a self-hosted server that
 speaks the reMarkable sync protocol, so documents sync to your own machine
 instead of reMarkable's cloud. Its web UI lets you browse, upload and
 download documents. It can also send documents by email over SMTP. It runs as
@@ -285,7 +285,7 @@ emerge -av app-misc/remarkable-meta
 ```
 
 Packages are keyworded `~amd64 ~arm64`, except `rm-exporter-bin` and
-`goosepaper` (`~amd64` only) and `rmfakecloud-bin` (also `~arm`).
+`goosepaper` (`~amd64` only) and `rmfakecloud-bin` (`~amd64 ~arm ~arm64`).
 
 `remanager-bin` and `remarkable-remember-bin` were replaced by
 source-built packages; `profiles/updates` moves existing installs over.
@@ -309,9 +309,16 @@ source-built packages; `profiles/updates` moves existing installs over.
   eclass and runs on the system .NET 10 runtime
   (`dev-dotnet/dotnet-sdk-bin:10.0` at build time). SkiaSharp, HarfBuzzSharp
   and SQLite native libraries still come prebuilt inside their NuGet packages.
-* **rm-exporter** and **rmfakecloud** stay binary for now: rm-exporter needs
-  the unpackaged `wails` CLI to generate its frontend bindings, and the
-  rmfakecloud UI uses pnpm, which isn't in ::gentoo.
+* **rmfakecloud** is built from source like remanager, except that its web
+  UI uses pnpm (`>=sys-apps/pnpm-bin-12` from ::guru). Each tarball in
+  `pnpm-lock.yaml` is a distfile; `src_prepare` lays them out like the npm
+  registry and pnpm installs from that as a `file://` registry, with the
+  lockfile unchanged (pnpm 12 rejects rewritten resolutions) and
+  `--trust-lockfile`, since its supply-chain check needs registry metadata.
+  `scripts/npm-src-uri.py` reads pnpm lockfiles as well as npm ones. `rmfakecloud-bin` stays for arm, which pnpm-bin
+  doesn't support; the two block each other.
+* **rm-exporter** stays binary for now: it needs the unpackaged `wails` CLI
+  to generate its frontend bindings.
 * **remarkable-tablet-driver** carries a patch so `--verbose` prints its
   arguments instead of raw format strings.
 * **remarkable-sdk-bin** repeats what the Yocto installer does with

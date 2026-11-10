@@ -38,7 +38,7 @@ RDEPEND="
 	)
 	news? ( amd64? ( app-text/goosepaper ) )
 	screenshot? ( media-gfx/resnap )
-	server? ( net-misc/rmfakecloud-bin )
+	server? ( net-misc/rmfakecloud )
 	stream? ( media-video/restream )
 	sync? ( app-misc/rmirro )
 "

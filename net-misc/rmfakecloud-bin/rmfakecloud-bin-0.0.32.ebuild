@@ -5,8 +5,8 @@ EAPI=8
 
 inherit systemd
 
-# Prebuilt: the server embeds a web UI that is built with pnpm, which is not
-# packaged in ::gentoo, so it cannot be built offline in an ebuild.
+# Prebuilt upstream release. net-misc/rmfakecloud builds the same from
+# source, but needs sys-apps/pnpm-bin (::guru), which has no arm build.
 
 DESCRIPTION="Self-hosted replacement for the reMarkable cloud (prebuilt binary)"
 HOMEPAGE="
@@ -34,7 +34,10 @@ DEPEND="
 	acct-group/rmfakecloud
 	acct-user/rmfakecloud
 "
-RDEPEND="${DEPEND}"
+RDEPEND="
+	${DEPEND}
+	!net-misc/rmfakecloud
+"
 
 QA_PREBUILT="usr/bin/rmfakecloud"
 

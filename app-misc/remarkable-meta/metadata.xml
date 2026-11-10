@@ -16,7 +16,7 @@
 		<flag name="mouse">Install <pkg>x11-misc/remarkable-mouse</pkg> (X11) and <pkg>x11-misc/remarkable-tablet-driver</pkg> (Wayland) to use the tablet as a pen tablet</flag>
 		<flag name="news">Install <pkg>app-text/goosepaper</pkg> (amd64 only) to generate daily newspapers for the tablet</flag>
 		<flag name="screenshot">Install <pkg>media-gfx/resnap</pkg> to take screenshots of the tablet</flag>
-		<flag name="server">Install <pkg>net-misc/rmfakecloud-bin</pkg>, a self-hosted cloud server</flag>
+		<flag name="server">Install <pkg>net-misc/rmfakecloud</pkg>, a self-hosted cloud server</flag>
 		<flag name="stream">Install <pkg>media-video/restream</pkg> to stream the tablet screen</flag>
 		<flag name="sync">Install <pkg>app-misc/rmirro</pkg> for cloud-free two-way file sync</flag>
 	</use>
