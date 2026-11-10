@@ -10,7 +10,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/rmscene` | 0.8.0 | Library for reading and writing v6 `.rm` notebook files |
 | `app-text/rmc` | 0.3.1_pre20260405 | Convert `.rm` files to SVG/PDF/Markdown (PDF export needs Inkscape) |
 | `net-misc/rmapi` | 0.0.35 | CLI and shell for the reMarkable cloud (ddvk fork, built from source) |
-| `net-misc/rmfakecloud` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services (`-bin` variant for arm) |
+| `net-misc/rmfakecloud` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services |
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
 | `media-video/restream` | 1.5.0 | Stream the tablet screen to an ffplay window |
 | `app-misc/rmirro` | 0_pre20250112 | Two-way sync between the tablet and a local folder, without the cloud |
@@ -285,10 +285,11 @@ emerge -av app-misc/remarkable-meta
 ```
 
 Packages are keyworded `~amd64 ~arm64`, except `rm-exporter-bin` and
-`goosepaper` (`~amd64` only) and `rmfakecloud-bin` (`~amd64 ~arm ~arm64`).
+`goosepaper` (`~amd64` only).
 
-`remanager-bin` and `remarkable-remember-bin` were replaced by
-source-built packages; `profiles/updates` moves existing installs over.
+`remanager-bin`, `remarkable-remember-bin` and `rmfakecloud-bin` were
+replaced by source-built packages; `profiles/updates` moves existing
+installs over.
 
 ## Packaging notes
 
@@ -315,8 +316,9 @@ source-built packages; `profiles/updates` moves existing installs over.
   registry and pnpm installs from that as a `file://` registry, with the
   lockfile unchanged (pnpm 12 rejects rewritten resolutions) and
   `--trust-lockfile`, since its supply-chain check needs registry metadata.
-  `scripts/npm-src-uri.py` reads pnpm lockfiles as well as npm ones. `rmfakecloud-bin` stays for arm, which pnpm-bin
-  doesn't support; the two block each other.
+  `scripts/npm-src-uri.py` reads pnpm lockfiles as well as npm ones.
+  Unlike `rmfakecloud-bin`, which it replaced, it has no `~arm` keyword:
+  pnpm-bin has no arm build.
 * **rm-exporter** stays binary for now: it needs the unpackaged `wails` CLI
   to generate its frontend bindings.
 * **remarkable-tablet-driver** carries a patch so `--verbose` prints its

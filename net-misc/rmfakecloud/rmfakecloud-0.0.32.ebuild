@@ -1256,18 +1256,14 @@ LICENSE="AGPL-3"
 # Go modules and bundled web UI libraries
 LICENSE+=" Apache-2.0 BSD BSD-2 ISC MIT"
 SLOT="0"
-# Limited to the arches sys-apps/pnpm-bin (::guru) has; on arm, use
-# net-misc/rmfakecloud-bin
+# Limited to the arches sys-apps/pnpm-bin (::guru) has
 KEYWORDS="~amd64 ~arm64"
 
 DEPEND="
 	acct-group/rmfakecloud
 	acct-user/rmfakecloud
 "
-RDEPEND="
-	${DEPEND}
-	!net-misc/rmfakecloud-bin
-"
+RDEPEND="${DEPEND}"
 BDEPEND="
 	>=dev-lang/go-1.23.3:=
 	net-libs/nodejs
