@@ -24,7 +24,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
 | `dev-util/vbuild` | 0.0.36 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
-| `dev-embedded/remarkable-sdk-bin` | 3.28.0.172 | reMarkable's official cross toolchains with Qt 6, one per device |
+| `dev-embedded/remarkable-sdk-bin` | 3.28.0.172, 3.29.1.0 | reMarkable's official cross toolchains with Qt 6, one per device |
 | `dev-embedded/remarkable-os-{rm1,rm2,ferrari,chiappa,tatsu}-bin` | 3.0.4.1305 – 3.29.1.0 | reMarkable OS update images, one package per device, one slot per X.Y release |
 | `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
 | `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
@@ -215,10 +215,11 @@ reMarkable's official SDKs: a GCC cross compiler, Qt 6, CMake, Meson and a
 sysroot matching one OS release. Pick devices with USE flags (`rm1`, `rm2`,
 `ferrari` = Paper Pro, `chiappa` = Paper Pro Move, `tatsu` = Paper Pure);
 each is about 0.5 GB to download and 2.7 GB installed, under
-`/opt/codex/<device>/5.8.203`, the path Vellum's recipes use. Source
+`/opt/codex/<device>/<codex version>` (5.8.203 for OS 3.28.0.172, 6.0.112
+for 3.29.1.0), the path Vellum's recipes use. Source
 `environment-setup-*` in that directory to get `CC`, `CXX`, `qmake6`,
 `CMAKE_TOOLCHAIN_FILE` and pkg-config set up. The version is the OS release
-(3.28.0.172) and each release is its own slot.
+and each release is its own slot.
 
 ### Meta package
 
