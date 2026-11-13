@@ -21,7 +21,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `x11-misc/remarkable-tablet-driver` | 0_pre20260506 | Pen tablet driver using uinput, so it works on Wayland too |
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
-| `app-misc/codexctl` | 1.2.1_p1793410533 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
+| `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
 | `dev-util/vbuild` | 0.0.36 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
 | `dev-embedded/remarkable-sdk-bin` | 3.28.0.172 | reMarkable's official cross toolchains with Qt 6, one per device |
