@@ -25,7 +25,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
 | `dev-util/vbuild` | 0.0.36 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
 | `dev-embedded/remarkable-sdk-bin` | 3.28.0.172 | reMarkable's official cross toolchains with Qt 6, one per device |
-| `dev-embedded/remarkable-os-{rm1,rm2,ferrari,chiappa,tatsu}-bin` | 3.0.4.1305 – 3.28.0.172 | reMarkable OS update images, one package per device, one slot per X.Y release |
+| `dev-embedded/remarkable-os-{rm1,rm2,ferrari,chiappa,tatsu}-bin` | 3.0.4.1305 – 3.29.1.0 | reMarkable OS update images, one package per device, one slot per X.Y release |
 | `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
 | `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
 | `dev-python/ext4`, `dev-python/libconf`, `dev-python/fuse-python` | | Dependencies of the above |
@@ -183,7 +183,7 @@ copies the image over SSH, so the tablet doesn't download the update from
 reMarkable:
 
 ```
-codexctl install /usr/share/remarkable-os/3.28.0.172/remarkable-production-image-3.28.0.172-rm2-public.swu
+codexctl install /usr/share/remarkable-os/3.29.1.0/remarkable-production-image-3.29.1.0-rm2-public.swu
 ```
 
 codexctl checks that the image matches the tablet. It won't downgrade a
