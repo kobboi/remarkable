@@ -14,7 +14,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
 | `media-video/restream` | 1.5.0 | Stream the tablet screen to an ffplay window |
 | `app-misc/rmirro` | 0_pre20250112 | Two-way sync between the tablet and a local folder, without the cloud |
-| `app-misc/remanager` | 2.0.0 | Desktop app for installing and managing tablet mods via Vellum (all models incl. Paper Pro) |
+| `app-misc/remanager` | 2.0.1 | Desktop app for installing and managing tablet mods via Vellum (all models incl. Paper Pro) |
 | `app-misc/remarkable-remember` | 1.10.0 | Offline backup, PDF/EPUB upload, templates and handwriting recognition GUI |
 | `app-misc/rm-exporter-bin` | 0.3.0 | Export whole folders and large notebooks to PDF over USB (amd64 only) |
 | `media-gfx/resnap` | 2.5.3 | Screenshot the tablet over SSH |

@@ -8,7 +8,7 @@ inherit desktop go-module optfeature xdg
 # go.mod replaces wails/v3 with ./third_party/wails-v3, which upstream fills
 # from the module cache (scripts/prepare-wails-fork.sh). Keep this in sync
 # with the wailsapp/wails/v3 version in go.mod.
-WAILS_PV="3.0.0-beta.26"
+WAILS_PV="3.0.0"
 APP_ID="io.scottlabs.reManager"
 
 DESCRIPTION="Desktop app for managing mods on reMarkable tablets via Vellum"
@@ -48,8 +48,8 @@ EGO_SUM=(
 	"github.com/google/uuid v1.6.0/go.mod"
 	"github.com/hhrutter/tiff v1.0.6"
 	"github.com/hhrutter/tiff v1.0.6/go.mod"
-	"github.com/klauspost/compress v1.18.7"
-	"github.com/klauspost/compress v1.18.7/go.mod"
+	"github.com/klauspost/compress v1.20.2"
+	"github.com/klauspost/compress v1.20.2/go.mod"
 	"github.com/kr/fs v0.1.0"
 	"github.com/kr/fs v0.1.0/go.mod"
 	"github.com/matryer/is v1.4.1"
@@ -86,20 +86,20 @@ EGO_SUM=(
 	"github.com/zalando/go-keyring v0.2.6/go.mod"
 	"go.yaml.in/yaml/v3 v3.0.5"
 	"go.yaml.in/yaml/v3 v3.0.5/go.mod"
-	"golang.org/x/crypto v0.56.0"
-	"golang.org/x/crypto v0.56.0/go.mod"
+	"golang.org/x/crypto v0.57.0"
+	"golang.org/x/crypto v0.57.0/go.mod"
 	"golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f"
 	"golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f/go.mod"
 	"golang.org/x/image v0.45.0"
 	"golang.org/x/image v0.45.0/go.mod"
 	"golang.org/x/sys v0.1.0/go.mod"
 	"golang.org/x/sys v0.6.0/go.mod"
-	"golang.org/x/sys v0.47.0"
-	"golang.org/x/sys v0.47.0/go.mod"
-	"golang.org/x/term v0.45.0"
-	"golang.org/x/term v0.45.0/go.mod"
-	"golang.org/x/text v0.41.0"
-	"golang.org/x/text v0.41.0/go.mod"
+	"golang.org/x/sys v0.48.0"
+	"golang.org/x/sys v0.48.0/go.mod"
+	"golang.org/x/term v0.46.0"
+	"golang.org/x/term v0.46.0/go.mod"
+	"golang.org/x/text v0.42.0"
+	"golang.org/x/text v0.42.0/go.mod"
 	"golang.org/x/time v0.15.0"
 	"golang.org/x/time v0.15.0/go.mod"
 	"gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod"
@@ -426,8 +426,8 @@ NPM_SRC_URI="
 		-> npm-@vitest+spy-3.2.7.tgz.npm
 	https://registry.npmjs.org/@vitest/utils/-/utils-3.2.7.tgz
 		-> npm-@vitest+utils-3.2.7.tgz.npm
-	https://registry.npmjs.org/@wailsio/runtime/-/runtime-3.0.0-beta.26.tgz
-		-> npm-@wailsio+runtime-3.0.0-beta.26.tgz.npm
+	https://registry.npmjs.org/@wailsio/runtime/-/runtime-3.0.0.tgz
+		-> npm-@wailsio+runtime-3.0.0.tgz.npm
 	https://registry.npmjs.org/@xterm/addon-fit/-/addon-fit-0.10.0.tgz
 		-> npm-@xterm+addon-fit-0.10.0.tgz.npm
 	https://registry.npmjs.org/@xterm/xterm/-/xterm-5.5.0.tgz
