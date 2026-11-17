@@ -23,7 +23,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
 | `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
-| `dev-util/vbuild` | 0.0.36 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
+| `dev-util/vbuild` | 0.0.39 | Build Vellum (VELBUILD) packages in containers (amd64 only) |
 | `dev-embedded/remarkable-sdk-bin` | 3.28.0.172, 3.29.1.0 | reMarkable's official cross toolchains with Qt 6, one per device |
 | `dev-embedded/remarkable-os-{rm1,rm2,ferrari,chiappa,tatsu}-bin` | 3.0.4.1305 – 3.29.1.0 | reMarkable OS update images, one package per device, one slot per X.Y release |
 | `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
