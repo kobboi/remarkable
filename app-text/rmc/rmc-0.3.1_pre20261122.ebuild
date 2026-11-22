@@ -10,7 +10,7 @@ inherit distutils-r1 optfeature
 
 # 0.3.0 pins rmscene<0.7, which cannot read files from current tablet
 # firmware; use a snapshot that supports rmscene 0.8.
-COMMIT="da87813a31496d156ca6ea8a27bf5128670fb45a"
+COMMIT="d140843eca0eed59a1211b26560a01cd530bcd65"
 
 DESCRIPTION="Convert reMarkable v6 .rm files to SVG, PDF and Markdown"
 HOMEPAGE="https://github.com/ricklupton/rmc"
@@ -27,8 +27,9 @@ RDEPEND="
 	<dev-python/rmscene-0.9[${PYTHON_USEDEP}]
 "
 
-EPYTEST_PLUGINS=()
-distutils_enable_tests pytest
+# upstream has no pytest modules, only sample .rm files; smoke-test the CLI
+IUSE="test"
+RESTRICT="!test? ( test )"
 
 src_prepare() {
 	distutils-r1_src_prepare
@@ -37,8 +38,13 @@ src_prepare() {
 }
 
 python_test() {
-	# test.py at top level is a manual script, not a test module
-	epytest tests
+	local f fmt
+	for f in tests/rm/*.rm; do
+		for fmt in svg markdown; do
+			rmc -t ${fmt} -o "${T}/out.${fmt}" "${f}" ||
+				die "rmc -t ${fmt} failed on ${f} with ${EPYTHON}"
+		done
+	done
 }
 
 pkg_postinst() {

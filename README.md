@@ -8,7 +8,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | Package | Version | What it does |
 |---|---|---|
 | `dev-python/rmscene` | 0.8.0 | Library for reading and writing v6 `.rm` notebook files |
-| `app-text/rmc` | 0.3.1_pre20260405 | Convert `.rm` files to SVG/PDF/Markdown (PDF export needs Inkscape) |
+| `app-text/rmc` | 0.3.1_pre20261122 | Convert `.rm` files to SVG/PDF/Markdown (PDF export needs Inkscape) |
 | `net-misc/rmapi` | 0.0.35 | CLI and shell for the reMarkable cloud (ddvk fork, built from source) |
 | `net-misc/rmfakecloud` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services |
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
