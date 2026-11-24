@@ -12,14 +12,14 @@ S="${WORKDIR}"
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
-IUSE="+cloud +convert dev firmware gui mouse news planner +screenshot server +stream +sync"
+IUSE="+cloud +convert dev firmware gui mcp mouse news planner +screenshot server +stream +sync"
 
 # amd64-only members: rm-exporter-bin (upstream only publishes an x86_64
-# Linux build), remarks (this overlay's PyMuPDF is only keyworded ~amd64),
-# goosepaper and ephemeris (weasyprint, readability-lxml and loguru are not
-# keyworded on arm64), and codexctl and vbuild (indexed-gzip and podman are
-# amd64-only).  The SDK is left out: it needs a device USE flag and is
-# several GB per device.
+# Linux build), remarks and remarkable-mcp (this overlay's PyMuPDF and mcp
+# are only keyworded ~amd64), goosepaper and ephemeris (weasyprint,
+# readability-lxml and loguru are not keyworded on arm64), and codexctl and
+# vbuild (indexed-gzip and podman are amd64-only).  The SDK is left out: it
+# needs a device USE flag and is several GB per device.
 RDEPEND="
 	cloud? ( net-misc/rmapi )
 	convert? (
@@ -37,6 +37,7 @@ RDEPEND="
 		app-misc/remarkable-remember
 		amd64? ( app-misc/rm-exporter-bin )
 	)
+	mcp? ( amd64? ( app-misc/remarkable-mcp ) )
 	mouse? (
 		x11-misc/remarkable-mouse
 		x11-misc/remarkable-tablet-driver

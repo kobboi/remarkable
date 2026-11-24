@@ -23,6 +23,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `app-text/pdf2rmnotebook` | 3.2.2 | Turn PDFs and images into editable notebooks (`.rmdoc`/`.zip`) |
 | `media-gfx/drawj2d` | 1.4.0 | Drawing language with `.rm`/`.rmdoc` output (used by pdf2rmnotebook) |
 | `app-text/remarks` | 0.3.10 | Extract highlights and handwriting from notebooks to Markdown and annotated PDF (amd64 only) |
+| `app-misc/remarkable-mcp` | 2.1.0 | MCP server so AI assistants can read, search and OCR tablet documents (amd64 only) |
 | `app-office/ephemeris` | 1.8.1 | Daily planner PDFs from ICS calendars (amd64 only) |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
 | `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
@@ -196,6 +197,18 @@ skips the run when the calendars haven't changed since the last one
 (`APP_FORCE_REFRESH=1` overrides). To deliver it, point `APP_POST_HOOK` at
 an upload command, such as `rmapi put --force output/ephemeris.pdf /Planner`.
 
+### AI assistants
+
+**remarkable-mcp** (`app-misc/remarkable-mcp`) is a Model Context Protocol
+server: an MCP client such as Claude Code or Claude Desktop starts it and
+can then list, search and read your documents, including the text of PDFs
+and EPUBs, typed notes, and handwriting through OCR (Tesseract with
+`app-text/tesseract`, or Google Vision with an API key). It reaches the
+tablet through the cloud (with a one-time code), `--ssh`, the USB web
+interface (`--usb`) or a local copy of the files (`--local-dir`), and has
+a `--read-only` mode. For example:
+`claude mcp add remarkable -- remarkable-mcp --ssh`.
+
 ### Firmware
 
 **codexctl** (`app-misc/codexctl`) manages the tablet's OS version from the
@@ -275,6 +288,7 @@ USE flag:
 | `convert` | on | rmc, pdf2rmnotebook, remarks (amd64) |
 | `dev` | off | qmldiff, vbuild (amd64) |
 | `firmware` | off | codexctl (amd64) |
+| `mcp` | off | remarkable-mcp (amd64) |
 | `gui` | off | reManager, reMarkable Remember, rm-exporter (amd64) |
 | `mouse` | off | remarkable-mouse, remarkable-tablet-driver |
 | `news` | off | goosepaper (amd64) |
@@ -426,6 +440,8 @@ installs over.
   `app-text/rmc`. Its hosted web service (`remarks-server`, with flask,
   gunicorn and sentry-sdk) is left out, as are dependencies it never
   imports (parsita, numpy, markupsafe).
+* **remarkable-mcp** drops `ebooklib` from its requirements; 2.1.0 never
+  imports it.
 * **mcp** 2.3.0 is here because ::guru only has 1.x, which
   remarkable-mcp can't use. Nothing in ::gentoo or ::guru depends on
   `dev-python/mcp`, so the newer version in this overlay replaces
@@ -476,7 +492,6 @@ run `ebuild <file> manifest`.
 * **paper2remarkable**: needs `pdfplumber`, which needs `pypdfium2` (bundles
   prebuilt pdfium).
 * **rmfuse / rmcl / rmrl**: pinned to old `trio` and to the retired sync API.
-* **remarkable-mcp**: needs `dev-python/mcp` 2.x; ::guru only has 1.x.
 * **librm_lines** / **Moss**: the library downloads five bundled C++
   dependencies with CMake FetchContent; Moss itself is still pre-release.
 * **lines-are-rusty**, **remouseable**, **rmapy**, **remarkable-cli-tooling**,

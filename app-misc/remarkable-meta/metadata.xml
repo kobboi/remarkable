@@ -13,6 +13,7 @@
 		<flag name="dev">Install mod development tools: <pkg>dev-util/qmldiff</pkg> and (amd64 only) <pkg>dev-util/vbuild</pkg>; the SDK (<pkg>dev-embedded/remarkable-sdk-bin</pkg>) is separate</flag>
 		<flag name="firmware">Install <pkg>app-misc/codexctl</pkg> (amd64 only) to download, inspect and switch tablet firmware</flag>
 		<flag name="gui">Install the desktop apps <pkg>app-misc/remanager</pkg>, <pkg>app-misc/remarkable-remember</pkg> and (amd64 only) <pkg>app-misc/rm-exporter-bin</pkg></flag>
+		<flag name="mcp">Install <pkg>app-misc/remarkable-mcp</pkg> (amd64 only) so AI assistants can read tablet documents over MCP</flag>
 		<flag name="mouse">Install <pkg>x11-misc/remarkable-mouse</pkg> (X11) and <pkg>x11-misc/remarkable-tablet-driver</pkg> (Wayland) to use the tablet as a pen tablet</flag>
 		<flag name="news">Install <pkg>app-text/goosepaper</pkg> (amd64 only) to generate daily newspapers for the tablet</flag>
 		<flag name="planner">Install <pkg>app-office/ephemeris</pkg> (amd64 only) to generate daily planner PDFs from ICS calendars</flag>
