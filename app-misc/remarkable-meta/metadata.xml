@@ -9,7 +9,7 @@
 	</upstream>
 	<use>
 		<flag name="cloud">Install <pkg>net-misc/rmapi</pkg> to access the reMarkable cloud</flag>
-		<flag name="convert">Install <pkg>app-text/rmc</pkg> to convert .rm notebooks to SVG/PDF/Markdown and <pkg>app-text/pdf2rmnotebook</pkg> to turn PDFs into editable notebooks</flag>
+		<flag name="convert">Install <pkg>app-text/rmc</pkg> to convert .rm notebooks to SVG/PDF/Markdown, <pkg>app-text/pdf2rmnotebook</pkg> to turn PDFs into editable notebooks, and (amd64 only) <pkg>app-text/remarks</pkg> to extract highlights and annotations</flag>
 		<flag name="dev">Install mod development tools: <pkg>dev-util/qmldiff</pkg> and (amd64 only) <pkg>dev-util/vbuild</pkg>; the SDK (<pkg>dev-embedded/remarkable-sdk-bin</pkg>) is separate</flag>
 		<flag name="firmware">Install <pkg>app-misc/codexctl</pkg> (amd64 only) to download, inspect and switch tablet firmware</flag>
 		<flag name="gui">Install the desktop apps <pkg>app-misc/remanager</pkg>, <pkg>app-misc/remarkable-remember</pkg> and (amd64 only) <pkg>app-misc/rm-exporter-bin</pkg></flag>

@@ -22,6 +22,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
 | `app-text/pdf2rmnotebook` | 3.2.2 | Turn PDFs and images into editable notebooks (`.rmdoc`/`.zip`) |
 | `media-gfx/drawj2d` | 1.4.0 | Drawing language with `.rm`/`.rmdoc` output (used by pdf2rmnotebook) |
+| `app-text/remarks` | 0.3.10 | Extract highlights and handwriting from notebooks to Markdown and annotated PDF (amd64 only) |
 | `app-office/ephemeris` | 1.8.1 | Daily planner PDFs from ICS calendars (amd64 only) |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
 | `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
@@ -73,6 +74,16 @@ files) and can write PDF, SVG, PNG and reMarkable `.rm`, `.rmn` and
 `.rmdoc` (`drawj2d -T rmdoc drawing.hcl`), for example for custom
 templates with editable lines. Its `.rm` pages use the older v5 lines
 format, which the tablet upgrades when it opens them.
+
+**remarks** (`app-text/remarks`) reads documents in the tablet's `xochitl`
+layout (a copy of `/home/root/.local/share/remarkable/xochitl`, or
+unpacked `.rmn`/`.rmdoc` files) and writes, per document, a PDF with the
+highlights and pen strokes drawn on the pages and an Obsidian-style
+Markdown file with the highlighted text, typed text and tags:
+`remarks <input dir> <output dir>`. It handles the Paper Pro's coloured
+highlighter; `--device` overrides the detected model. PDF pages with typed
+text render better if Chromium or Chrome is installed (otherwise CairoSVG
+is used).
 
 ### Cloud
 
@@ -261,7 +272,7 @@ USE flag:
 | USE flag | Default | Installs |
 |---|---|---|
 | `cloud` | on | rmapi |
-| `convert` | on | rmc, pdf2rmnotebook |
+| `convert` | on | rmc, pdf2rmnotebook, remarks (amd64) |
 | `dev` | off | qmldiff, vbuild (amd64) |
 | `firmware` | off | codexctl (amd64) |
 | `gui` | off | reManager, reMarkable Remember, rm-exporter (amd64) |
@@ -408,6 +419,13 @@ installs over.
   releases for it. The test suite pip-installs its own requirements, so
   it is restricted; upstream's tests passed outside portage, against this
   build.
+* **remarks** depends on its own forks of rmscene and rmc, which have
+  diverged far from upstream's (a rewritten SVG exporter, highlight
+  colours). They are installed privately under `/usr/lib/remarks` next
+  to remarks itself, so they don't clash with `dev-python/rmscene` and
+  `app-text/rmc`. Its hosted web service (`remarks-server`, with flask,
+  gunicorn and sentry-sdk) is left out, as are dependencies it never
+  imports (parsita, numpy, markupsafe).
 * **restream** and **resnap** also install the ARMv7 helpers that run on the
   tablet (`/usr/share/restream/restream` and `/usr/share/resnap/lz4`); copy
   them to the device with `scp`.
@@ -453,9 +471,7 @@ run `ebuild <file> manifest`.
 * **paper2remarkable**: needs `pdfplumber`, which needs `pypdfium2` (bundles
   prebuilt pdfium).
 * **rmfuse / rmcl / rmrl**: pinned to old `trio` and to the retired sync API.
-* **remarks** (Scrybbling-together fork): pinned to forked git versions of
-  rmscene/rmc and needs PyMuPDF, which isn't in ::gentoo. Same PyMuPDF block
-  for **remarkable-mcp**.
+* **remarkable-mcp**: needs `dev-python/mcp` 2.x; ::guru only has 1.x.
 * **librm_lines** / **Moss**: the library downloads five bundled C++
   dependencies with CMake FetchContent; Moss itself is still pre-release.
 * **lines-are-rusty**, **remouseable**, **rmapy**, **remarkable-cli-tooling**,

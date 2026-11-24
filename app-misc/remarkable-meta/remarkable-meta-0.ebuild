@@ -15,15 +15,17 @@ KEYWORDS="~amd64 ~arm64"
 IUSE="+cloud +convert dev firmware gui mouse news planner +screenshot server +stream +sync"
 
 # amd64-only members: rm-exporter-bin (upstream only publishes an x86_64
-# Linux build), goosepaper and ephemeris (weasyprint, readability-lxml and
-# loguru are not keyworded on arm64), and codexctl and vbuild (indexed-gzip
-# and podman are amd64-only).  The SDK is left out: it needs a device USE
-# flag and is several GB per device.
+# Linux build), remarks (this overlay's PyMuPDF is only keyworded ~amd64),
+# goosepaper and ephemeris (weasyprint, readability-lxml and loguru are not
+# keyworded on arm64), and codexctl and vbuild (indexed-gzip and podman are
+# amd64-only).  The SDK is left out: it needs a device USE flag and is
+# several GB per device.
 RDEPEND="
 	cloud? ( net-misc/rmapi )
 	convert? (
 		app-text/pdf2rmnotebook
 		app-text/rmc
+		amd64? ( app-text/remarks )
 	)
 	dev? (
 		dev-util/qmldiff
