@@ -5,6 +5,7 @@ Usage: check-updates.py [-q] [category/package ...]
 
 Where each package is checked:
   - PyPI, for packages with a <remote-id type="pypi"> in metadata.xml
+  - SourceForge's file list, for a <remote-id type="sourceforge">
   - the reMarkable developer links page, for dev-embedded/remarkable-sdk-bin
   - codexctl's firmware list, for dev-embedded/remarkable-os-*-bin
   - the GitHub repo in HOMEPAGE otherwise: its release tags with
@@ -27,6 +28,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 SKIP = {"app-misc/remarkable-meta"}
+# Packages tied to another package's release series: only newer versions
+# with this prefix count. PyMuPDF must match ::gentoo's app-text/mupdf.
+HOLD = {"dev-python/pymupdf": "1.28."}
 SDK_LINKS = "https://developer.remarkable.com/links"
 OS_VERSIONS = "https://raw.githubusercontent.com/Jayy001/codexctl/main/data/version-ids.json"
 # remarkable-os-<device>-bin -> its key in codexctl's version list
@@ -90,6 +94,8 @@ class Package:
         meta = meta.read_text() if meta.exists() else ""
         m = re.search(r'<remote-id type="pypi">([^<]+)</remote-id>', meta)
         self.pypi = m and m.group(1)
+        m = re.search(r'<remote-id type="sourceforge">([^<]+)</remote-id>', meta)
+        self.sourceforge = m and m.group(1)
         m = re.search(r'^COMMIT="([0-9a-f]+)"', self.ebuild, re.M)
         self.commit = m and m.group(1)
         m = re.search(r"https://github\.com/([\w.-]+/[\w.-]+)", self.ebuild)
@@ -107,9 +113,19 @@ class Package:
             note = "run scripts/os-image-ebuilds.py"
             return (latest, note) if vkey(latest) > vkey(self.pv) else (None, "")
         if self.pypi:
-            latest = json.loads(fetch(f"https://pypi.org/pypi/{self.pypi}/json"))["info"]["version"]
+            data = json.loads(fetch(f"https://pypi.org/pypi/{self.pypi}/json"))
+            latest = data["info"]["version"]
+            if hold := HOLD.get(self.name):
+                held = [v for v, files in data["releases"].items()
+                        if v.startswith(hold) and files and RELEASE_TAG.match(v)]
+                latest = max(held, key=vkey)
             current = self.pv.replace("_p", ".post")
             return (latest, "") if vkey(latest) > vkey(current) else (None, "")
+        if self.sourceforge:
+            rss = fetch(f"https://sourceforge.net/projects/{self.sourceforge}/rss?path=/")
+            found = re.findall(r"<title><!\[CDATA\[/(\d+(?:\.\d+)+)/", rss)
+            latest = max(found, key=vkey)
+            return (latest, "") if vkey(latest) > vkey(self.pv) else (None, "")
         if not self.github:
             raise RuntimeError("no upstream found")
 
