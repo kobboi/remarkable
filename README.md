@@ -20,6 +20,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `media-gfx/resnap` | 2.5.3 | Screenshot the tablet over SSH |
 | `x11-misc/remarkable-tablet-driver` | 0_pre20260506 | Pen tablet driver using uinput, so it works on Wayland too |
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
+| `media-gfx/drawj2d` | 1.4.0 | Drawing language with `.rm`/`.rmdoc` output (used by pdf2rmnotebook) |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
 | `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
@@ -52,6 +53,13 @@ SVG keeps the pen strokes. Markdown extracts the typed text and the
 highlighted passages. PDF output renders the SVG through Inkscape, so install
 `media-gfx/inkscape` for it. It can also go the other way and turn a Markdown
 file into a `.rm` page of typed text.
+
+**drawj2d** (`media-gfx/drawj2d`) does the drawing for pdf2rmnotebook, but
+is usable on its own: it draws from a small Tcl-like language (`.hcl`
+files) and can write PDF, SVG, PNG and reMarkable `.rm`, `.rmn` and
+`.rmdoc` (`drawj2d -T rmdoc drawing.hcl`), for example for custom
+templates with editable lines. Its `.rm` pages use the older v5 lines
+format, which the tablet upgrades when it opens them.
 
 ### Cloud
 
@@ -344,6 +352,10 @@ installs over.
   `codexctl mount`.
 * **remarkapy** depends on `dev-python/httpx`, which ::gentoo has deprecated;
   pkgcheck warns about it.
+* **drawj2d** is built from its source tarball with `java-pkg-simple`
+  instead of using the prebuilt jar. The source bundles the libraries it
+  uses (FreeHEP, Hecl, JLaTeXMath, PDFRenderer, …), which is why
+  `LICENSE` is long; the TCL DXF part carries only a warranty disclaimer.
 * **restream** and **resnap** also install the ARMv7 helpers that run on the
   tablet (`/usr/share/restream/restream` and `/usr/share/resnap/lz4`); copy
   them to the device with `scp`.
