@@ -31,6 +31,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-embedded/remarkable-os-{rm1,rm2,ferrari,chiappa,tatsu}-bin` | 3.0.4.1305 – 3.29.1.0 | reMarkable OS update images, one package per device, one slot per X.Y release |
 | `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
 | `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
+| `dev-python/pymupdf` | 1.28.2 | PyMuPDF, built against the system MuPDF (amd64 only) |
 | `dev-python/ext4`, `dev-python/libconf`, `dev-python/fuse-python` | | Dependencies of the above |
 | `dev-python/pipcl` | 13 | Dependency of PyMuPDF |
 | `app-misc/remarkable-meta` | 0 | Meta package that pulls in the tools above by USE flag |
@@ -395,6 +396,18 @@ installs over.
   which ::gentoo has deprecated because 5.x is broken, so it is capped
   below 5 and pkgcheck warns about it. amd64 only, since `dev-python/loguru`
   has no arm64 keyword.
+* **pymupdf** is built against `app-text/mupdf`, which has to be the same
+  X.Y release (1.28), instead of downloading and building its own MuPDF
+  with bundled libraries. PyMuPDF also needs MuPDF's C++ and Python (SWIG)
+  bindings, which `app-text/mupdf` doesn't build, so the ebuild generates
+  them from the matching MuPDF source with MuPDF's `mupdfwrap.py` (this
+  takes several minutes) and installs `libmupdfcpp` and `_mupdf.so` inside
+  the `pymupdf` package. They are built once for Python's stable ABI.
+  PyMuPDF 2.x isn't packaged: it pulls in onnxruntime and other AI
+  layout packages. `scripts/check-updates.py` only reports 1.28.x
+  releases for it. The test suite pip-installs its own requirements, so
+  it is restricted; upstream's tests passed outside portage, against this
+  build.
 * **restream** and **resnap** also install the ARMv7 helpers that run on the
   tablet (`/usr/share/restream/restream` and `/usr/share/resnap/lz4`); copy
   them to the device with `scp`.
