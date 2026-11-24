@@ -21,7 +21,10 @@ IUSE="+cloud +convert dev firmware gui mouse news +screenshot server +stream +sy
 # several GB per device.
 RDEPEND="
 	cloud? ( net-misc/rmapi )
-	convert? ( app-text/rmc )
+	convert? (
+		app-text/pdf2rmnotebook
+		app-text/rmc
+	)
 	dev? (
 		dev-util/qmldiff
 		amd64? ( dev-util/vbuild )
