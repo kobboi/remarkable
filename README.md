@@ -34,7 +34,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
 | `dev-python/pymupdf` | 1.28.2 | PyMuPDF, built against the system MuPDF (amd64 only) |
 | `dev-python/ext4`, `dev-python/libconf`, `dev-python/fuse-python` | | Dependencies of the above |
-| `dev-python/pipcl` | 13 | Dependency of PyMuPDF |
+| `dev-python/mcp`, `dev-python/mcp-types`, `dev-python/pipcl` | 2.3.0, 2.3.0, 13 | Dependencies of remarkable-mcp and PyMuPDF |
 | `app-misc/remarkable-meta` | 0 | Meta package that pulls in the tools above by USE flag |
 | `acct-{user,group}/rmfakecloud` | 0 | Service account for rmfakecloud |
 
@@ -426,6 +426,11 @@ installs over.
   `app-text/rmc`. Its hosted web service (`remarks-server`, with flask,
   gunicorn and sentry-sdk) is left out, as are dependencies it never
   imports (parsita, numpy, markupsafe).
+* **mcp** 2.3.0 is here because ::guru only has 1.x, which
+  remarkable-mcp can't use. Nothing in ::gentoo or ::guru depends on
+  `dev-python/mcp`, so the newer version in this overlay replaces
+  ::guru's without breaking anything. Its tests are restricted (they need
+  git-only test dependencies).
 * **restream** and **resnap** also install the ARMv7 helpers that run on the
   tablet (`/usr/share/restream/restream` and `/usr/share/resnap/lz4`); copy
   them to the device with `scp`.
