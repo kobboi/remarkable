@@ -492,6 +492,23 @@ run `ebuild <file> manifest`.
 * **paper2remarkable**: needs `pdfplumber`, which needs `pypdfium2` (bundles
   prebuilt pdfium).
 * **rmfuse / rmcl / rmrl**: pinned to old `trio` and to the retired sync API.
+  Nothing else mounts the cloud as a filesystem. For the tablet itself
+  (checked 2026-11-24):
+  * [tomaszwaraksa/remarkable-fs](https://github.com/tomaszwaraksa/remarkable-fs)
+    (Go, MIT) mounts the tablet over SSH, by USB or WiFi, with the real
+    folder names. It opens notebooks as rendered PDFs and can upload, make
+    folders and delete. It is too new to package yet: first commit
+    2026-11-16, reMarkable 2 only, and upstream takes no issues or pull
+    requests.
+  * [nick8325/remarkable-fs](https://github.com/nick8325/remarkable-fs)
+    (Python) hasn't changed since 2022 and predates the v6 format.
+  * `sshfs` on `/home/root/.local/share/remarkable/xochitl` works, but shows
+    the raw UUID-named files.
+
+  Until then, `rmirro` (a local mirror as PDFs, both ways) and `rmapi`'s
+  shell are the closest equivalents.
+* **url2epub**: a library plus a Telegram bot that runs on Google Cloud Run;
+  there is no command-line tool to package.
 * **librm_lines** / **Moss**: the library downloads five bundled C++
   dependencies with CMake FetchContent; Moss itself is still pre-release.
 * **lines-are-rusty**, **remouseable**, **rmapy**, **remarkable-cli-tooling**,
