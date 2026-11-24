@@ -13,7 +13,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `net-misc/rmfakecloud` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services |
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
 | `media-video/restream` | 1.5.0 | Stream the tablet screen to an ffplay window |
-| `app-misc/rmirro` | 0_pre20250112 | Two-way sync between the tablet and a local folder, without the cloud |
+| `app-misc/rmirro` | 0_pre20261123 | Two-way sync between the tablet and a local folder, without the cloud |
 | `app-misc/remanager` | 2.0.1 | Desktop app for installing and managing tablet mods via Vellum (all models incl. Paper Pro) |
 | `app-misc/remarkable-remember` | 1.10.0 | Offline backup, PDF/EPUB upload, templates and handwriting recognition GUI |
 | `app-misc/rm-exporter-bin` | 0.3.0 | Export whole folders and large notebooks to PDF over USB (amd64 only) |

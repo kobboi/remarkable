@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python3_{12..15} )
 inherit python-single-r1
 
 # Upstream makes no releases; package a snapshot of the default branch
-COMMIT="39d8a858d32e1b7ea28c96217b069b9b577aa1c1"
+COMMIT="2556c0359946fca81e6dd0cf3c033b73e29b1f9c"
 
 DESCRIPTION="Two-way sync between a reMarkable tablet and a local folder, without the cloud"
 HOMEPAGE="https://github.com/hersle/rmirro"
