@@ -32,6 +32,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/remarkable-update-image` | 1.4.2 | Library for reading OS update images (used by codexctl) |
 | `dev-python/remarkable-update-fuse` | 1.4.3 | Mount OS update images with FUSE (`rmufuse`) |
 | `dev-python/ext4`, `dev-python/libconf`, `dev-python/fuse-python` | | Dependencies of the above |
+| `dev-python/pipcl` | 13 | Dependency of PyMuPDF |
 | `app-misc/remarkable-meta` | 0 | Meta package that pulls in the tools above by USE flag |
 | `acct-{user,group}/rmfakecloud` | 0 | Service account for rmfakecloud |
 
