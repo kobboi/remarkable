@@ -22,6 +22,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
 | `app-text/pdf2rmnotebook` | 3.2.2 | Turn PDFs and images into editable notebooks (`.rmdoc`/`.zip`) |
 | `media-gfx/drawj2d` | 1.4.0 | Drawing language with `.rm`/`.rmdoc` output (used by pdf2rmnotebook) |
+| `app-office/ephemeris` | 1.8.1 | Daily planner PDFs from ICS calendars (amd64 only) |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
 | `app-misc/codexctl` | 1.2.1_p1794370117 | Download, install, inspect and downgrade tablet firmware (amd64 only) |
 | `dev-util/qmldiff` | 0_pre20260917 | Create, hash and apply QMD diffs, the format of xovi UI mods |
@@ -171,6 +172,17 @@ Wikipedia's current events, Mastodon, Bluesky, Reddit and weather, and picks
 a style and a page profile per tablet model. With `--deliver` it uploads the
 result through rmapi's credentials.
 
+**Ephemeris** (`app-office/ephemeris`) makes a daily planner PDF from ICS
+calendars, local files or URLs: an hour grid with the day's events, an
+all-day band and a clickable mini calendar, one page per day of
+`TIME_DATE_RANGE` (`today`, `week`, `month`, …). Calendars are listed in
+`~/.config/ephemeris/config.yaml` (an example is in the package's docs);
+everything else is set through environment variables, see upstream's
+README. It writes `output/ephemeris.pdf` in the current directory, and
+skips the run when the calendars haven't changed since the last one
+(`APP_FORCE_REFRESH=1` overrides). To deliver it, point `APP_POST_HOOK` at
+an upload command, such as `rmapi put --force output/ephemeris.pdf /Planner`.
+
 ### Firmware
 
 **codexctl** (`app-misc/codexctl`) manages the tablet's OS version from the
@@ -253,6 +265,7 @@ USE flag:
 | `gui` | off | reManager, reMarkable Remember, rm-exporter (amd64) |
 | `mouse` | off | remarkable-mouse, remarkable-tablet-driver |
 | `news` | off | goosepaper (amd64) |
+| `planner` | off | Ephemeris (amd64) |
 | `screenshot` | on | resnap |
 | `server` | off | rmfakecloud |
 | `stream` | on | restream |
@@ -369,6 +382,18 @@ installs over.
 * **pdf2rmnotebook** is a snapshot: upstream bumped the script to 3.2.2
   without tagging it. Its templates go to `/usr/share/pdf2rmnotebook`
   instead of `/var/lib`.
+* **Ephemeris** has no Python packaging and finds its fonts and cover page
+  next to its modules, so it is installed under `/usr/share/ephemeris` with
+  a wrapper. Upstream keeps `config.yaml` and the change-detection file
+  in the program's directory; the wrapper moves them to
+  `~/.config/ephemeris/` and `~/.local/state/ephemeris/` unless
+  `APP_CONFIG_PATH`/`APP_META_FILE_PATH` are set. The unused `pypdf`
+  requirement is dropped, and the exact `==` pins are relaxed (it runs
+  with icalendar 7, upstream pins 6). PNG/SVG output needs
+  `app-text/poppler[cairo,utils]`. It depends on `dev-python/reportlab`,
+  which ::gentoo has deprecated because 5.x is broken, so it is capped
+  below 5 and pkgcheck warns about it. amd64 only, since `dev-python/loguru`
+  has no arm64 keyword.
 * **restream** and **resnap** also install the ARMv7 helpers that run on the
   tablet (`/usr/share/restream/restream` and `/usr/share/resnap/lz4`); copy
   them to the device with `scp`.
