@@ -22,6 +22,9 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
 | `app-text/pdf2rmnotebook` | 3.2.2 | Turn PDFs and images into editable notebooks (`.rmdoc`/`.zip`) |
 | `media-gfx/drawj2d` | 1.4.0 | Drawing language with `.rm`/`.rmdoc` output (used by pdf2rmnotebook) |
+| `dev-python/pylibrm-lines` | 1.3.6 | Library that renders `.rm` pages to images, text and Markdown, through librm_lines |
+| `dev-python/rm-lines-sys` | 1.4.10 | librm_lines, a C++ `.rm` reader and renderer, with its ctypes bindings |
+| `dev-python/rm-api` | 1.3.4 | Python library for the reMarkable cloud and rmfakecloud |
 | `app-text/remarks` | 0.3.10 | Extract highlights and handwriting from notebooks to Markdown and annotated PDF (amd64 only) |
 | `app-misc/remarkable-mcp` | 2.1.0 | MCP server so AI assistants can read, search and OCR tablet documents (amd64 only) |
 | `app-office/ephemeris` | 1.8.1 | Daily planner PDFs from ICS calendars (amd64 only) |
@@ -59,6 +62,16 @@ SVG keeps the pen strokes. Markdown extracts the typed text and the
 highlighted passages. PDF output renders the SVG through Inkscape, so install
 `media-gfx/inkscape` for it. It can also go the other way and turn a Markdown
 file into a `.rm` page of typed text.
+
+**pylibrm-lines** (`dev-python/pylibrm-lines`) is a second, independent
+take on the `.rm` format: a Python library over librm_lines
+(`dev-python/rm-lines-sys`), a C++ reader and renderer that aims to keep up
+with new firmware. It renders a page to a Pillow image or PNG, optionally
+on top of a template or a PDF page as backdrop (install
+`dev-python/pymupdf` for that), and extracts the typed text as plain text
+or Markdown. It pulls in `dev-python/rm-api`, a client library for the
+reMarkable cloud and rmfakecloud whose document models it uses. All three
+are libraries, from the developer of the Moss desktop client.
 
 **pdf2rmnotebook** (`app-text/pdf2rmnotebook`) turns PDFs and PNG/JPEG
 images into a notebook whose pages are pen strokes rather than a PDF
@@ -357,6 +370,20 @@ installs over.
   The default (highest) version is a git snapshot that works with
   rmscene 0.8.
 * **rmscene** relaxes upstream's arbitrary `packaging ^23` cap.
+* **rm-lines-sys** builds librm_lines against system nlohmann_json,
+  utfcpp, simdutf, FreeType and HarfBuzz instead of the copies upstream's
+  CMake downloads, and drops cppcodec, which is linked but never used. The
+  library is installed inside the Python module, which is where the
+  bindings load it from. The bundled fonts are split into static weights
+  with fonttools at build time, as upstream does. PyPI has only wheels for
+  it, rm-api and pylibrm-lines, so all three build from GitHub tags.
+* **rm-api** uses `pypdf` instead of `PyPDF2`, which ::gentoo removed
+  (only `PdfReader` is used), and drops `httpx` and `packaging`, which it
+  lists but never imports. Its upstream tests are removed from the
+  installed package.
+* **pylibrm-lines** drops the unused `ipykernel` requirement and makes
+  `pymupdf` optional. Its output-format test is skipped: it needs the
+  unpackaged `pygameextra`.
 * **rmapi** uses `EGO_SUM`. pkgcheck flags it as deprecated, but there is
   nowhere to host a vendor tarball. Its Go modules are fetched straight from
   proxy.golang.org, because the eclass's `mirror://goproxy//` URIs make
@@ -511,8 +538,8 @@ run `ebuild <file> manifest`.
   shell are the closest equivalents.
 * **url2epub**: a library plus a Telegram bot that runs on Google Cloud Run;
   there is no command-line tool to package.
-* **librm_lines** / **Moss**: the library downloads five bundled C++
-  dependencies with CMake FetchContent; Moss itself is still pre-release.
+* **Moss**: still pre-release. Its rendering and cloud libraries are
+  packaged (`dev-python/pylibrm-lines`, `dev-python/rm-api`).
 * **lines-are-rusty**, **remouseable**, **rmapy**, **remarkable-cli-tooling**,
   **asTounding**, **RemaPy**, **maxio**: unmaintained, or only handle the old
   `.rm` format.
