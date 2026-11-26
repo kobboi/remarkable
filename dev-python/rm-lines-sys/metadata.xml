@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>claude@lermytte.be</email>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">RedTTGMoss/librm_lines</remote-id>
+		<remote-id type="pypi">rm-lines-sys</remote-id>
+	</upstream>
+</pkgmetadata>
