@@ -36,7 +36,7 @@ src_install() {
 	newbin ${PN}.sh ${PN}
 	insinto /usr/share/${PN}
 	doins var/lib/${PN}/*
-	dodoc README.md TODO.md BUGS
+	dodoc README.md TODO.md
 	docinto examples
 	dodoc example/*.{hcl,pdf,png,jpg}
 	docompress -x /usr/share/doc/${PF}/examples
