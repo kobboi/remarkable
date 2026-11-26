@@ -7,8 +7,8 @@ Gentoo ebuild repository for host-side tools that work with the
 
 | Package | Version | What it does |
 |---|---|---|
-| `dev-python/rmscene` | 0.8.0 | Library for reading and writing v6 `.rm` notebook files |
-| `app-text/rmc` | 0.3.1_pre20261122 | Convert `.rm` files to SVG/PDF/Markdown (PDF export needs Inkscape) |
+| `dev-python/rmscene` | 0.6.1, 0.8.0 | Library for reading and writing v6 `.rm` notebook files |
+| `app-text/rmc` | 0.3.0, 0.3.1_pre20261122 | Convert `.rm` files to SVG/PDF/Markdown (PDF export needs Inkscape) |
 | `net-misc/rmapi` | 0.0.35 | CLI and shell for the reMarkable cloud (ddvk fork, built from source) |
 | `net-misc/rmfakecloud` | 0.0.32 | Self-hosted cloud replacement, with OpenRC and systemd services |
 | `x11-misc/remarkable-mouse` | 7.2.0 | Use the tablet as a mouse or pen tablet over SSH |
@@ -352,8 +352,10 @@ installs over.
 
 ## Packaging notes
 
-* **rmc** uses a git snapshot because the 0.3.0 release pins `rmscene<0.7`,
-  which can't read files from current tablet firmware.
+* **rmc** 0.3.0, the latest release, pins `rmscene<0.7`, which can't read
+  files from current tablet firmware, so it comes with **rmscene** 0.6.1.
+  The default (highest) version is a git snapshot that works with
+  rmscene 0.8.
 * **rmscene** relaxes upstream's arbitrary `packaging ^23` cap.
 * **rmapi** uses `EGO_SUM`. pkgcheck flags it as deprecated, but there is
   nowhere to host a vendor tarball. Its Go modules are fetched straight from
