@@ -457,6 +457,9 @@ installs over.
   them from the matching MuPDF source with MuPDF's `mupdfwrap.py` (this
   takes several minutes) and installs `libmupdfcpp` and `_mupdf.so` inside
   the `pymupdf` package. They are built once for Python's stable ABI.
+  `mupdfwrap.py` expects pip's libclang 18; a patch adapts it to the
+  system's newer libclang (forward declarations, `(unnamed …)`
+  spellings), and the ebuild points libclang at its own headers.
   PyMuPDF 2.x isn't packaged: it pulls in onnxruntime and other AI
   layout packages. `scripts/check-updates.py` only reports 1.28.x
   releases for it. The test suite pip-installs its own requirements, so

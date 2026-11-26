@@ -49,6 +49,11 @@ python_check_deps() {
 
 src_prepare() {
 	distutils-r1_src_prepare
+	# mupdfwrap is written for pip's libclang 18; make it work with the
+	# system's newer one
+	pushd "${WORKDIR}/${MUPDF_P}" >/dev/null || die
+	eapply "${FILESDIR}"/${P}-mupdfwrap-libclang.patch
+	popd >/dev/null || die
 	# mupdfwrap re-runs itself in a fresh venv, which doesn't see the
 	# system's clang bindings or pipcl; run it with the system Python.
 	sed -i -e 's/^autovenv\.enter()$/pass/' \
@@ -68,6 +73,20 @@ src_compile() {
 	(
 		python_setup
 		cd "${WORKDIR}/${MUPDF_P}" || die
+		# Unlike pip's libclang, the system one doesn't find its own
+		# headers (stddef.h), and without them ptrdiff_t turns into int in
+		# the generated API. Use the headers of the libclang that the clang
+		# bindings load.
+		local clang_major
+		clang_major=$("${EPYTHON}" -c '
+import re, clang.cindex as ci
+v = ci.conf.lib.clang_getClangVersion()
+v = v if isinstance(v, str) else ci._CXString.from_result(v)
+print(re.search(r"version (\d+)", v).group(1))
+') || die "cannot get the libclang version"
+		local -x MUPDFWRAP_CLANG_RESOURCE_DIR="${BROOT}/usr/lib/clang/${clang_major}"
+		[[ -f ${MUPDFWRAP_CLANG_RESOURCE_DIR}/include/stddef.h ]] ||
+			die "no clang headers in ${MUPDFWRAP_CLANG_RESOURCE_DIR}"
 		# 0, 1: generate and build libmupdfcpp; 2, 3: generate and build
 		# the SWIG module _mupdf.so.
 		edo "${EPYTHON}" scripts/mupdfwrap.py -d ${build} -b 0123

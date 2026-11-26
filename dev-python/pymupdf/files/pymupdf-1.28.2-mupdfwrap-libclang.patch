@@ -1,0 +1,44 @@
+--- a/scripts/wrap/cpp.py
++++ b/scripts/wrap/cpp.py
+@@ -5586,6 +5586,8 @@
+                 '-D', 'MUPDF_WRAP_LIBCLANG',
+                 '-D', 'FZ_FUNCTION=',
+                 ]
++        if os.environ.get('MUPDFWRAP_CLANG_RESOURCE_DIR'):
++            args += ['-resource-dir', os.environ['MUPDFWRAP_CLANG_RESOURCE_DIR']]
+         tu = index.parse(
+                 temp_h,
+                 args = args,
+--- a/scripts/wrap/state.py
++++ b/scripts/wrap/state.py
+@@ -16,6 +16,30 @@
+ 
+ try:
+     import clang.cindex
++    # Newer libclang (seen with 22 and 23) returns the first declaration
++    # of a type, often a forward declaration with no members; the code
++    # below expects the definition, as older libclang returned.
++    _get_declaration = clang.cindex.Type.get_declaration
++    def _get_declaration_definition(self):
++        decl = _get_declaration(self)
++        defn = decl.get_definition()
++        return decl if defn is None else defn
++    clang.cindex.Type.get_declaration = _get_declaration_definition
++    # It also spells anonymous structs, unions and enums as
++    # '(unnamed union at ...)' instead of '', which the code below relies
++    # on to recurse into them.
++    _spelling = clang.cindex.Cursor.spelling
++    _anonymous_kinds = (
++            clang.cindex.CursorKind.STRUCT_DECL,
++            clang.cindex.CursorKind.UNION_DECL,
++            clang.cindex.CursorKind.ENUM_DECL,
++            )
++    def _spelling_anonymous_empty(self):
++        ret = _spelling.fget(self)
++        if ret.startswith('(') and self.kind in _anonymous_kinds and self.is_anonymous():
++            return ''
++        return ret
++    clang.cindex.Cursor.spelling = property(_spelling_anonymous_empty)
+ except Exception as e:
+     if '--venv' not in sys.argv:
+         jlib.log('Warning: failed to import clang.cindex: {e=}\n'
