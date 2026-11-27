@@ -25,7 +25,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `dev-python/pylibrm-lines` | 1.3.6 | Library that renders `.rm` pages to images, text and Markdown, through librm_lines |
 | `dev-python/rm-lines-sys` | 1.4.10 | librm_lines, a C++ `.rm` reader and renderer, with its ctypes bindings |
 | `dev-python/rm-api` | 1.3.4 | Python library for the reMarkable cloud and rmfakecloud |
-| `app-text/remarks` | 0.3.10 | Extract highlights and handwriting from notebooks to Markdown and annotated PDF (amd64 only) |
+| `app-text/remarks` | 0.3.10_p20261126 | Extract highlights and handwriting from notebooks to Markdown and annotated PDF (amd64 only) |
 | `app-misc/remarkable-mcp` | 2.1.0 | MCP server so AI assistants can read, search and OCR tablet documents (amd64 only) |
 | `app-office/ephemeris` | 1.8.1 | Daily planner PDFs from ICS calendars (amd64 only) |
 | `app-text/goosepaper` | 0.8.1 | Build daily newspapers from RSS/Wikipedia and send them to the tablet (amd64 only) |
@@ -71,7 +71,8 @@ on top of a template or a PDF page as backdrop (install
 `dev-python/pymupdf` for that), and extracts the typed text as plain text
 or Markdown. It pulls in `dev-python/rm-api`, a client library for the
 reMarkable cloud and rmfakecloud whose document models it uses. All three
-are libraries, from the developer of the Moss desktop client.
+are libraries, from the developer of the Moss desktop client; remarks
+uses them for its Markdown output.
 
 **pdf2rmnotebook** (`app-text/pdf2rmnotebook`) turns PDFs and PNG/JPEG
 images into a notebook whose pages are pen strokes rather than a PDF
@@ -97,7 +98,9 @@ Markdown file with the highlighted text, typed text and tags:
 `remarks <input dir> <output dir>`. It handles the Paper Pro's coloured
 highlighter; `--device` overrides the detected model. PDF pages with typed
 text render better if Chromium or Chrome is installed (otherwise CairoSVG
-is used).
+is used). The Markdown text and highlights come from librm_lines
+(`dev-python/pylibrm-lines`), and pages it can't read get a warning
+annotation in the PDF instead.
 
 ### Cloud
 
