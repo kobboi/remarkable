@@ -131,7 +131,11 @@ class Package:
 
         # A snapshot like 0.3.1_pre20260405 is superseded by tag 0.3.1. For
         # 0_pre snapshots any tags predate the snapshot, so only HEAD counts.
+        # A snapshot ebuild without _pre (0.3.10, 0.3.10_p20261126) is at or
+        # after its version, so a newer commit is a _p snapshot, not _pre.
         base, snapshot, _ = self.pv.partition("_pre")
+        if not snapshot:
+            base = re.sub(r"_p\d+$", "", base)
         if base != "0" or not snapshot:
             tag = latest_tag(self.github)
             if tag and (vkey(tag) >= vkey(base) if snapshot else vkey(tag) > vkey(base)):
@@ -139,11 +143,12 @@ class Package:
         if self.commit:
             head = ls_remote(self.github, refs=["HEAD"])[0][0]
             if head != self.commit:
+                suffix = "_pre" if snapshot else "_p"
                 try:
                     date = commit_date(self.github, head, token)
-                    return f"{base}_pre{date}", f"commit {head[:12]}"
+                    return f"{base}{suffix}{date}", f"commit {head[:12]}"
                 except Exception:
-                    return f"{base}_pre?", f"commit {head[:12]} (date lookup failed)"
+                    return f"{base}{suffix}?", f"commit {head[:12]} (date lookup failed)"
         return None, ""
 
 
