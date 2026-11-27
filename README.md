@@ -20,7 +20,7 @@ Gentoo ebuild repository for host-side tools that work with the
 | `media-gfx/resnap` | 2.5.3 | Screenshot the tablet over SSH |
 | `x11-misc/remarkable-tablet-driver` | 0_pre20260506 | Pen tablet driver using uinput, so it works on Wayland too |
 | `dev-python/remarkapy` | 0.3.1 | Python client for the reMarkable cloud |
-| `app-text/pdf2rmnotebook` | 3.2.2 | Turn PDFs and images into editable notebooks (`.rmdoc`/`.zip`) |
+| `app-text/pdf2rmnotebook` | 3.2.0, 3.2.0_p20260131 | Turn PDFs and images into editable notebooks (`.rmdoc`/`.zip`) |
 | `media-gfx/drawj2d` | 1.4.0 | Drawing language with `.rm`/`.rmdoc` output (used by pdf2rmnotebook) |
 | `dev-python/pylibrm-lines` | 1.3.6 | Library that renders `.rm` pages to images, text and Markdown, through librm_lines |
 | `dev-python/rm-lines-sys` | 1.4.10 | librm_lines, a C++ `.rm` reader and renderer, with its ctypes bindings |
@@ -438,8 +438,9 @@ installs over.
   instead of using the prebuilt jar. The source bundles the libraries it
   uses (FreeHEP, Hecl, JLaTeXMath, PDFRenderer, …), which is why
   `LICENSE` is long; the TCL DXF part carries only a warranty disclaimer.
-* **pdf2rmnotebook** is a snapshot: upstream bumped the script to 3.2.2
-  without tagging it. Its templates go to `/usr/share/pdf2rmnotebook`
+* **pdf2rmnotebook**: the default version is a snapshot after the v3.2.0
+  tag (the script calls itself 3.2.2, which upstream never tagged); 3.2.0
+  is kept as the latest release. Its templates go to `/usr/share/pdf2rmnotebook`
   instead of `/var/lib`.
 * **Ephemeris** has no Python packaging and finds its fonts and cover page
   next to its modules, so it is installed under `/usr/share/ephemeris` with

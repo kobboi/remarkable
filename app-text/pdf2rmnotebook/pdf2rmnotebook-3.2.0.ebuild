@@ -5,13 +5,9 @@ EAPI=8
 
 inherit optfeature
 
-# 3.2.2 is only a version bump inside the script; upstream's last tag is v3.2.0
-COMMIT="2abf2d66d516ed9f25903902a4db11a926b285de"
-
 DESCRIPTION="Turn PDFs and images into editable reMarkable notebooks"
 HOMEPAGE="https://github.com/JCN-9000/pdf2rmnotebook"
-SRC_URI="https://github.com/JCN-9000/pdf2rmnotebook/archive/${COMMIT}.tar.gz -> ${P}.gh.tar.gz"
-S="${WORKDIR}/${PN}-${COMMIT}"
+SRC_URI="https://github.com/JCN-9000/pdf2rmnotebook/archive/refs/tags/v${PV}.tar.gz -> ${P}.gh.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -38,7 +34,7 @@ src_install() {
 	doins var/lib/${PN}/*
 	dodoc README.md TODO.md
 	docinto examples
-	dodoc example/*.{hcl,pdf,png,jpg}
+	dodoc example/*.{pdf,png}
 	docompress -x /usr/share/doc/${PF}/examples
 }
 
